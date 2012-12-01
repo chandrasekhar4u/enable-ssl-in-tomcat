@@ -1,4 +1,4 @@
-keytool -genkeypair -alias client2key -keyalg RSA -dname "CN=client2,OU=Application Development,O=GoSmarter,L=Bangalore,S=KA,C=IN" -keypass password -storepass password -keystore client2.jks
+keytool -genkeypair -alias client2key -keyalg RSA -dname "CN=client2,OU=Application Development,O=GoSmarter,L=Bangalore,ST=KA,C=IN" -keypass password -storepass password -keystore client2.jks
 
 keytool -exportcert -alias client2key -file client2-public.cer -keystore client2.jks -storepass password
 keytool -importcert -keystore server.jks -alias client2cert -file client2-public.cer -storepass password -noprompt
