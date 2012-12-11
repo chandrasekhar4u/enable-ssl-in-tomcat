@@ -20,14 +20,13 @@ import org.junit.Test;
 
 public class SecureHttpClient1Test {
 
-	public static final String path = "D:/springsource/vfabric-tc-server-developer-2.7.2.RELEASE/my-instance2/conf/";
-	public static final String client1Jks = path + "client.jks";
-	public static final String client2Jks = path + "client1.jks";
-	
+	public static final String path = "D:/apache-tomcat-6.0.36/conf/";
+	public static final String client1Jks = path + "client1.jks";
+	public static final String client2Jks = path + "/client2.jks";
+
 	private static Logger logger = Logger.getLogger(SecureHttpClient1Test.class);
 
-	private SchemeRegistry getSchemeRegistry(String keystoreString,
-			String truststoreString) throws Exception {
+	private SchemeRegistry getSchemeRegistry(String keystoreString, String truststoreString) throws Exception {
 		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
 
 		InputStream keystoreInput = new FileInputStream(keystoreString);
@@ -41,24 +40,19 @@ public class SecureHttpClient1Test {
 		truststore.load(truststoreInput, "password".toCharArray());
 
 		SchemeRegistry schemeRegistry = new SchemeRegistry();
-		SSLSocketFactory lSchemeSocketFactory = new SSLSocketFactory(keystore,
-				"password", truststore);
-		schemeRegistry
-				.register(new Scheme("https", 8443, lSchemeSocketFactory));
+		SSLSocketFactory lSchemeSocketFactory = new SSLSocketFactory(keystore, "password", truststore);
+		schemeRegistry.register(new Scheme("https", 8443, lSchemeSocketFactory));
 		return schemeRegistry;
 	}
 
 	@Test
 	public void testMainPage() throws Exception {
 
-		SchemeRegistry schemeRegistry = getSchemeRegistry(
-				client1Jks,
-				client1Jks);
+		SchemeRegistry schemeRegistry = getSchemeRegistry(client1Jks, client1Jks);
 
 		final HttpParams httpParams = new BasicHttpParams();
-		DefaultHttpClient lHttpClient = new DefaultHttpClient(
-				new SingleClientConnManager(schemeRegistry), httpParams);
-		HttpGet lMethod = new HttpGet("https://localhost:8443/air/index.jsp");
+		DefaultHttpClient lHttpClient = new DefaultHttpClient(new SingleClientConnManager(schemeRegistry), httpParams);
+		HttpGet lMethod = new HttpGet("https://localhost:8443/client1/index.jsp");
 
 		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
 		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
@@ -67,15 +61,11 @@ public class SecureHttpClient1Test {
 
 	@Test
 	public void testSecurePage() throws IOException, Exception {
-		SchemeRegistry schemeRegistry = getSchemeRegistry(
-				client1Jks,
-				client1Jks);
+		SchemeRegistry schemeRegistry = getSchemeRegistry(client1Jks, client1Jks);
 
 		final HttpParams httpParams = new BasicHttpParams();
-		DefaultHttpClient lHttpClient = new DefaultHttpClient(
-				new SingleClientConnManager(schemeRegistry), httpParams);
-		HttpGet lMethod = new HttpGet(
-				"https://localhost:8443/air/secure/index.jsp");
+		DefaultHttpClient lHttpClient = new DefaultHttpClient(new SingleClientConnManager(schemeRegistry), httpParams);
+		HttpGet lMethod = new HttpGet("https://localhost:8443/client1/secure/index.jsp");
 
 		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
 		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
@@ -92,7 +82,7 @@ public class SecureHttpClient1Test {
 		DefaultHttpClient lHttpClient = new DefaultHttpClient(
 				new SingleClientConnManager(schemeRegistry), httpParams);
 		HttpGet lMethod = new HttpGet(
-				"https://localhost:8443/air/secure/index.jsp");
+				"https://localhost:8443/client1/secure/index.jsp");
 
 		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
 		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
