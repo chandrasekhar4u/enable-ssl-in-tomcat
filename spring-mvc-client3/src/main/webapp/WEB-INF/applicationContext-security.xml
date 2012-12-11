@@ -9,21 +9,28 @@
 
     <global-method-security pre-post-annotations="enabled" />
 
+<!-- There is no security requirement to access the html resources like css, js etc and maybe loggedout.jsp page -->
     <http pattern="/static/**" security="none"/>
     <http pattern="/loggedout.jsp" security="none"/>
 
     <http use-expressions="true">
+<!-- Only supervisor can access secure1 webresources and all the resources under it and this resource can be accessed only if the request is https-->
     	<intercept-url pattern="/secure1/**" access="hasRole('supervisor')" requires-channel="https"/>
+<!-- You have to be logged in to access secure folder and all resources under it -->
         <intercept-url pattern="/secure/**" access="isAuthenticated()" requires-channel="https"/>
+<!-- You have to be logged in to access secure folder and all resources under it -->
 		<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="https"/>
 
+<!-- Here is where you provide a regular expression to extract user identity from the certificate and pass it to a authentication provider, in this example,
+there is a dummy authentication provider as below, in real example, the auth provider is something like LDAP -->
     	<x509 subject-principal-regex="CN=(.*?)," user-service-ref="accountService" />        
     </http>
 
     <authentication-manager>
         <authentication-provider>
+        <!-- Dummy anthentication provider -->
             <user-service id="accountService">
-                <user name="client1" password="" authorities="supervisor, user, teller" />
+                <user name="client1" password="" authorities="supervisor" />
                 <user name="client2" password="" authorities="user" />
  			</user-service>
         </authentication-provider>
