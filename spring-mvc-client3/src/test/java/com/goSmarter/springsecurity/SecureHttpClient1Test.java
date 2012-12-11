@@ -22,9 +22,9 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 
 public class SecureHttpClient1Test {
 
-	public static final String path = "D:/springsource/vfabric-tc-server-developer-2.7.2.RELEASE/my-instance2/conf/";
-	public static final String client1Jks = path + "client.jks";
-	public static final String client2Jks = path + "client1.jks";
+	public static final String path = "D:/apache-tomcat-6.0.36/conf/";
+	public static final String client1Jks = path + "client1.jks";
+	public static final String client2Jks = path + "client2.jks";
 	
 	private static Logger logger = Logger.getLogger(SecureHttpClient1Test.class);
 

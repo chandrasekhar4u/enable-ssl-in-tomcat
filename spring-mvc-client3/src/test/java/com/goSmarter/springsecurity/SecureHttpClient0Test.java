@@ -22,7 +22,7 @@ public class SecureHttpClient0Test {
 	static {
 		System.setProperty("javax.net.debug", "ssl");
 	}
-	public static final String path = "D:/springsource/vfabric-tc-server-developer-2.7.2.RELEASE/my-instance2/conf/";
+	public static final String path = "D:/apache-tomcat-6.0.36/conf/";
 	public static final String client1Jks = path + "client1.jks";
 	
 	private static Logger logger = Logger.getLogger(SecureHttpClient0Test.class);
