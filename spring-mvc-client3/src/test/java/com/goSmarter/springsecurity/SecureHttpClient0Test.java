@@ -1,7 +1,6 @@
-package com.goSmarter.test;
+package com.goSmarter.springsecurity;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 
@@ -18,13 +17,15 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SecureHttpClient1Test {
+public class SecureHttpClient0Test {
 
+	static {
+		System.setProperty("javax.net.debug", "ssl");
+	}
 	public static final String path = "D:/springsource/vfabric-tc-server-developer-2.7.2.RELEASE/my-instance2/conf/";
-	public static final String client1Jks = path + "client.jks";
-	public static final String client2Jks = path + "client1.jks";
+	public static final String client1Jks = path + "client1.jks";
 	
-	private static Logger logger = Logger.getLogger(SecureHttpClient1Test.class);
+	private static Logger logger = Logger.getLogger(SecureHttpClient0Test.class);
 
 	private SchemeRegistry getSchemeRegistry(String keystoreString,
 			String truststoreString) throws Exception {
@@ -58,44 +59,10 @@ public class SecureHttpClient1Test {
 		final HttpParams httpParams = new BasicHttpParams();
 		DefaultHttpClient lHttpClient = new DefaultHttpClient(
 				new SingleClientConnManager(schemeRegistry), httpParams);
-		HttpGet lMethod = new HttpGet("https://localhost:8443/air/index.jsp");
+		HttpGet lMethod = new HttpGet("https://localhost:8443/spring-mvc-client3/secure/index.jsp");
 
 		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
 		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
 		Assert.assertEquals(200, lHttpResponse.getStatusLine().getStatusCode());
-	}
-
-	@Test
-	public void testSecurePage() throws IOException, Exception {
-		SchemeRegistry schemeRegistry = getSchemeRegistry(
-				client1Jks,
-				client1Jks);
-
-		final HttpParams httpParams = new BasicHttpParams();
-		DefaultHttpClient lHttpClient = new DefaultHttpClient(
-				new SingleClientConnManager(schemeRegistry), httpParams);
-		HttpGet lMethod = new HttpGet(
-				"https://localhost:8443/air/secure/index.jsp");
-
-		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
-		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
-		Assert.assertEquals(200, lHttpResponse.getStatusLine().getStatusCode());
-	}
-
-	@Test
-	public void testSecurePageNegativeCase() throws IOException, Exception {
-		SchemeRegistry schemeRegistry = getSchemeRegistry(
-				client2Jks,
-				client2Jks);
-
-		final HttpParams httpParams = new BasicHttpParams();
-		DefaultHttpClient lHttpClient = new DefaultHttpClient(
-				new SingleClientConnManager(schemeRegistry), httpParams);
-		HttpGet lMethod = new HttpGet(
-				"https://localhost:8443/air/secure/index.jsp");
-
-		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
-		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
-		Assert.assertEquals(403, lHttpResponse.getStatusLine().getStatusCode());
 	}
 }

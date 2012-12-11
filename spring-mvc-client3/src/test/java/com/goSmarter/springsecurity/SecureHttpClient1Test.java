@@ -1,8 +1,10 @@
-package com.goSmarter.test;
+package com.goSmarter.springsecurity;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.KeyStore;
 
 import org.apache.http.HttpResponse;
@@ -11,12 +13,12 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.SingleClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.apache.http.impl.conn.SingleClientConnManager;
 
 public class SecureHttpClient1Test {
 
@@ -58,15 +60,32 @@ public class SecureHttpClient1Test {
 		final HttpParams httpParams = new BasicHttpParams();
 		DefaultHttpClient lHttpClient = new DefaultHttpClient(
 				new SingleClientConnManager(schemeRegistry), httpParams);
-		HttpGet lMethod = new HttpGet("https://localhost:8443/air/index.jsp");
+		HttpGet lMethod = new HttpGet("https://localhost:8443/spring-mvc-client3/secure/index.jsp");
 
 		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
 		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
+		
+				
 		Assert.assertEquals(200, lHttpResponse.getStatusLine().getStatusCode());
+		
+		readData(lHttpResponse);
+		
+	}
+
+	private void readData(HttpResponse lHttpResponse) throws IOException {
+		InputStream is = lHttpResponse.getEntity().getContent();
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		
+		String str = null;
+
+		while((str = reader.readLine()) != null){
+			logger.debug(str);
+		}
 	}
 
 	@Test
-	public void testSecurePage() throws IOException, Exception {
+	public void testSecurePage() throws Exception {
 		SchemeRegistry schemeRegistry = getSchemeRegistry(
 				client1Jks,
 				client1Jks);
@@ -75,15 +94,16 @@ public class SecureHttpClient1Test {
 		DefaultHttpClient lHttpClient = new DefaultHttpClient(
 				new SingleClientConnManager(schemeRegistry), httpParams);
 		HttpGet lMethod = new HttpGet(
-				"https://localhost:8443/air/secure/index.jsp");
+				"https://localhost:8443/spring-mvc-client3/secure1/index.jsp");
 
 		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
 		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
 		Assert.assertEquals(200, lHttpResponse.getStatusLine().getStatusCode());
+		readData(lHttpResponse);
 	}
 
 	@Test
-	public void testSecurePageNegativeCase() throws IOException, Exception {
+	public void testSecurePageNegativeCase() throws Exception {
 		SchemeRegistry schemeRegistry = getSchemeRegistry(
 				client2Jks,
 				client2Jks);
@@ -92,10 +112,11 @@ public class SecureHttpClient1Test {
 		DefaultHttpClient lHttpClient = new DefaultHttpClient(
 				new SingleClientConnManager(schemeRegistry), httpParams);
 		HttpGet lMethod = new HttpGet(
-				"https://localhost:8443/air/secure/index.jsp");
+				"https://localhost:8443/spring-mvc-client3/secure1/index.jsp");
 
 		HttpResponse lHttpResponse = lHttpClient.execute(lMethod);
 		logger.debug(lHttpResponse.getStatusLine().getStatusCode());
 		Assert.assertEquals(403, lHttpResponse.getStatusLine().getStatusCode());
+		readData(lHttpResponse);
 	}
 }
